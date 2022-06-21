@@ -54,28 +54,28 @@ namespace Microsoft.VisualBasic
 				throw new ArgumentNullException(nameof(fileNames));
 
 			CompilerResults results = new CompilerResults (options.TempFiles);
-			Process vbnc = new Process ();
+			Process vbc = new Process ();
 
-			string vbnc_output = "";
-			string[] vbnc_output_lines;
+			string vbc_output = "";
+			string[] vbc_output_lines;
 			// FIXME: these lines had better be platform independent.
 			if (Path.DirectorySeparatorChar == '\\') {
-				vbnc.StartInfo.FileName = MonoToolsLocator.Mono;
-				vbnc.StartInfo.Arguments = MonoToolsLocator.VBCompiler + ' ' + BuildArgs (options, fileNames);
+				vbc.StartInfo.FileName = MonoToolsLocator.Mono;
+				vbc.StartInfo.Arguments = MonoToolsLocator.VBCompiler + ' ' + BuildArgs (options, fileNames);
 			} else {
-				vbnc.StartInfo.FileName = MonoToolsLocator.VBCompiler;
-				vbnc.StartInfo.Arguments = BuildArgs (options, fileNames);
+				vbc.StartInfo.FileName = MonoToolsLocator.VBCompiler;
+				vbc.StartInfo.Arguments = BuildArgs (options, fileNames);
 			}
-			//Console.WriteLine (vbnc.StartInfo.Arguments);
-			vbnc.StartInfo.CreateNoWindow = true;
-			vbnc.StartInfo.UseShellExecute = false;
-			vbnc.StartInfo.RedirectStandardOutput = true;
+			//Console.WriteLine (vbc.StartInfo.Arguments);
+			vbc.StartInfo.CreateNoWindow = true;
+			vbc.StartInfo.UseShellExecute = false;
+			vbc.StartInfo.RedirectStandardOutput = true;
 			try {
-				vbnc.Start ();
+				vbc.Start ();
 			} catch (Exception e) {
 				Win32Exception exc = e as Win32Exception;
 				if (exc != null) {
-					throw new SystemException (String.Format ("Error running {0}: {1}", vbnc.StartInfo.FileName,
+					throw new SystemException (String.Format ("Error running {0}: {1}", vbc.StartInfo.FileName,
 											Win32Exception.GetErrorMessage (exc.NativeErrorCode)));
 				}
 				throw;
@@ -176,8 +176,8 @@ namespace Microsoft.VisualBasic
 				args.Append (options.CompilerOptions);
 				args.Append (" ");
 			}
-			/* Disabled, vbnc does not support this.
-			args.Append (" -- "); // makes vbnc not try to process filenames as options
+			/* Disabled, vbc does not support this.
+			args.Append (" -- "); // makes vbc not try to process filenames as options
 			*/
 			foreach (string source in fileNames)
 				args.AppendFormat (" \"{0}\" ", source);
